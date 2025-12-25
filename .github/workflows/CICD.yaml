@@ -26,4 +26,4 @@ jobs:
                 context: .
                 file: ./Dockerfile
                 push: true
-                tags: 555
+                tags: ayat93/nodeapp:555
