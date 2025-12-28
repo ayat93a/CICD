@@ -41,5 +41,6 @@ jobs:
               echo "pull 555 image"
               docker pull ${{ secrets.DOCKER_UNAME }}/nodeapp:555
 
-
+              docker stop nodeapp 
+              docker rm nodeapp
               docker run -dp 81:3000 --name nodeapp ${{ secrets.DOCKER_UNAME }}/nodeapp:555
