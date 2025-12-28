@@ -46,8 +46,11 @@ jobs:
 
             - name: Load version into enviroment
               run: |
-               VESRION=$(grep 'version' version.yaml | awk -F': ' '{print $2}')
+               VERSION=$(grep 'version' version.yaml | awk -F': ' '{print $2}')
                echo "VERSION=$VERSION" >> $GITHUB_ENV
+
+            - name: Debuugung the extracted Version
+              run: echo $VERSION
 
             - name: Login to DockerHub
               uses: docker/login-action@v3
@@ -61,7 +64,7 @@ jobs:
                 context: .
                 file: ./Dockerfile
                 push: true
-                tags: ayat93/nodeapp:$VERSION
+                tags: ayat93/nodeapp:${{ env.VERSION }}
     deploy:
       runs-on: ubuntu-latest
       needs: docker
