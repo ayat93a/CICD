@@ -77,7 +77,7 @@ jobs:
 
         - name: Load version into enviroment
           run: |
-            VESRION=$(grep 'version' version.yaml | awk -F': ' '{print $2}')
+            VERSION=$(grep 'version' version.yaml | cut -d'"' -f2)
             echo "VERSION=$VERSION" >> $GITHUB_ENV
         - name: ssh to the server
           uses: appleboy/ssh-action@v1.0.3
@@ -86,7 +86,7 @@ jobs:
             username: ${{ secrets.HOST_NAME }}
             key: ${{ secrets.KEY }}
             script: |
-              echo "pull 555 image"
+              echo "pull image"
               docker pull ${{ secrets.DOCKER_UNAME }}/nodeapp:${{ env.VERSION }}
 
               docker stop nodeapp 
