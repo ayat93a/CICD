@@ -9,7 +9,7 @@ on:
 
 jobs:
     docker:
-        runs-on: ubuntu-latest
+        runs-on: ubuntu-555
         steps:
             - name: Checkout repo
               uses: actions/checkout@v4
@@ -28,7 +28,7 @@ jobs:
                 push: true
                 tags: ayat93/nodeapp:555
     deploy:
-      runs-on: ubuntu-latest
+      runs-on: ubuntu-555
       needs: docker
       steps:
         - name: ssh to the server
@@ -38,8 +38,8 @@ jobs:
             username: ${{ secrets.HOST_NAME }}
             key: ${{ secrets.KEY }}
             script: |
-              echo "pull latest image"
-              docker pull ${{ secrets.DOCKER_UNAME }}/nodeapp:latest
+              echo "pull 555 image"
+              docker pull ${{ secrets.DOCKER_UNAME }}/nodeapp:555
 
 
-              docker run -dp 81:3000 --name nodeapp ${{ secrets.DOCKER_UNAME }}/nodeapp:latest
+              docker run -dp 81:3000 --name nodeapp ${{ secrets.DOCKER_UNAME }}/nodeapp:555
