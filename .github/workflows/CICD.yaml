@@ -8,7 +8,7 @@ on:
 
 
 jobs:
-    perpare:
+    docker:
         runs-on: ubuntu-latest
         steps:
             - name: Checkout repo
@@ -27,3 +27,19 @@ jobs:
                 file: ./Dockerfile
                 push: true
                 tags: ayat93/nodeapp:555
+    deploy:
+      runs-on: ubuntu-latest
+      needs: docker
+      steps:
+        - name: ssh to the server
+          uses: appleboy/ssh-actions@v1.0.3
+          with:
+            host: ${{ secrets.HOST }}
+            username: ${{ secrets.HOST_NAME }}
+            key: ${{ secrets.KEY }}
+            script: |
+              echo "pull latest image"
+              docker pull ${{ secrets.DOCKER_UNAME }}/nodeapp:latest
+
+
+              docker run -dp 81:3000 --name nodeapp ${{ secrets.DOCKER_UNAME }}/nodeapp:latest
