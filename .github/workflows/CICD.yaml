@@ -46,7 +46,7 @@ jobs:
 
             - name: Load version into enviroment
               run: |
-               VERSION=$(grep 'version' version.yaml | awk -F': ' '{print $2}')
+               VERSION=$(grep 'version' version.yaml | cut -d'"' -f2)
                echo "VERSION=$VERSION" >> $GITHUB_ENV
 
             - name: Debuugung the extracted Version
