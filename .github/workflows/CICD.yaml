@@ -101,8 +101,9 @@ jobs:
 
             - name: Extract app artifact
               run: |
-                mkdir -p app
-                tar -xzf $(ls nodeapp-*.tgz | head -n -1) -C app
+                mkdir -p 
+                ARTIFACT=$(ls nodeapp-*.tgz | head -n -1)
+                tar -xzf  "ARTIFACT" -C app
               
             - name: Login to DockerHub
               uses: docker/login-action@v3
