@@ -3,7 +3,7 @@ FROM node:20-slim
 
 WORKDIR /usr/src/app
 
-COPY artifacts/ ./
+COPY app/ ./
 
 EXPOSE 3000
 
