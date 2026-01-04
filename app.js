@@ -6,7 +6,7 @@ const app = express();
 
 // Define a route to handle GET requests to the root URL
 app.get('/', (req, res) => {
-  res.send('Hi DevOps from pipeline');
+  res.send('Hi DevOps ');
 });
 
 // Define the port number
