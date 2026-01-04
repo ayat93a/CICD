@@ -100,10 +100,12 @@ jobs:
               with:
                 name: app-build
 
+            
             - name: Extract app artifact
               run: |
                 mkdir -p app
                 ARTIFACT=$(ls nodeapp-*.tgz | head -n -1)
+                echo $ARTIFACT
                 tar -xzf  "$ARTIFACT" -C app
               
             - name: Login to DockerHub
