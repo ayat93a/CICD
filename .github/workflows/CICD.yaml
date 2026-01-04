@@ -101,7 +101,7 @@ jobs:
 
             - name: Extract app artifact
               run: |
-                mkdir -p 
+                mkdir -p app
                 ARTIFACT=$(ls nodeapp-*.tgz | head -n -1)
                 tar -xzf  "$ARTIFACT" -C app
               
