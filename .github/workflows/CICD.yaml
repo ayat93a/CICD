@@ -31,8 +31,18 @@ jobs:
             name: version
             path: version.yaml
 
-  
+    config_aws:
+      runs-on: ubuntu-latest
+      steps:
+        - name : Config AWS credintails
+          uses: aws-actions/configure-aws-credentials@v5.1.1
+          with:
+            aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+            aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+            aws_region: ${{ secrets.AWS_REGION }}   
             
+        - name: Login into AWS ecr
+          uses: aws-actions/amazon-ecr-login@v2
     build:
       runs-on: ubuntu-latest
       needs: prepare
@@ -108,6 +118,8 @@ jobs:
                 echo $ARTIFACT
                 tar -xzf  "$ARTIFACT" -C app
               
+
+               
             - name: Login to DockerHub
               uses: docker/login-action@v3
               with: 
@@ -121,6 +133,7 @@ jobs:
                 file: ./Dockerfile
                 push: true
                 tags: ayat93/nodeapp:${{ env.VERSION }}
+                # cahnge user name
     deploy:
       runs-on: ubuntu-latest
       needs: docker
