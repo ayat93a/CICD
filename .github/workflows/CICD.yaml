@@ -2,7 +2,7 @@ name: Node ja App
 
 on:
     push:
-        branches: [ main ]
+        branches: [ main, prod ]
     pull_request: 
         branches: [ main ]
 
@@ -31,16 +31,7 @@ jobs:
             name: version
             path: version.yaml
 
-    config_aws:
-      runs-on: ubuntu-latest
-      steps:
-        - name : Config AWS credintails
-          uses: aws-actions/configure-aws-credentials@v4
-          with:
-            aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-            aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-            aws-region: ${{ secrets.AWS_REGION }}   
-            
+
         - name: Login into AWS ecr
           uses: aws-actions/amazon-ecr-login@v2
     build:
@@ -141,6 +132,7 @@ jobs:
           
     promot:
       runs-on: ubuntu-latest
+      if: github.ref == 'refs/heads/prod'
       outputs:
         latest_tag: ${{ steps.extract.outputs.latest_tag }}
         base_tag: ${{ steps.extract.outputs.base_tag }}
@@ -178,6 +170,8 @@ jobs:
 
     push-promoted-image:
       runs-on: ubuntu-latest
+      if: github.ref == 'refs/heads/prod'
+
       needs: promot
       steps:
       - name : Config AWS credintails
@@ -201,7 +195,11 @@ jobs:
 
     deploy:
       runs-on: ubuntu-latest
-      needs: docker
+      if: github.ref == 'refs/heads/prod'
+
+      needs:
+        - promot
+        - push-promoted-image
       steps:
 
         - name: Download artifact
@@ -221,8 +219,8 @@ jobs:
             key: ${{ secrets.KEY }}
             script: |
               echo "pull image"
-              docker pull ${{ secrets.AWS_ECR_URL }}/nodeapp:${{ env.VERSION }}
+              docker pull ${{ secrets.AWS_ECR_URL }}/nodeapp:${{ needs.promot.outputs.base_tag }}
 
               docker stop nodeapp 
               docker rm nodeapp
-              docker run -dp 81:3000 --name nodeapp ${{ secrets.AWS_ECR_URL }}/nodeapp:${{env.VERSION}}
+              docker run -dp 81:3000 --name nodeapp ${{ secrets.AWS_ECR_URL }}/nodeapp:${{ needs.promot.outputs.base_tag }}
