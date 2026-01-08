@@ -31,9 +31,6 @@ jobs:
             name: version
             path: version.yaml
 
-
-        - name: Login into AWS ecr
-          uses: aws-actions/amazon-ecr-login@v2
     build:
       runs-on: ubuntu-latest
       needs: prepare
