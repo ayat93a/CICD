@@ -1,5 +1,5 @@
 {
-  "name": "nodejs-app-for-testing-ansible",
+  "name": "nodejs-app",
   "version": "7.9.12-test",
   "description": "",
   "main": "index.js",
