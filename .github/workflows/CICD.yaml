@@ -159,10 +159,10 @@ jobs:
               ' | jq -s 'sort_by(.pushedAt) | last.tag')
 
             LATEST_TAG=$(echo "$LATEST_TAG" | tr -d '"')
-            echo "Latest tag = $LATEST_TAG"
+            echo "Latest_tag = $LATEST_TAG"
             export BASE_TAG=$(echo "$LATEST_TAG" | cut -d'-' -f1 | tr -d '"')
             echo "BASE_TAG=$BASE_TAG"
-            echo "Latest tag = $LATEST_TAG" >> $GITHUB_OUTPUT
+            echo "Latest_tag = $LATEST_TAG" >> $GITHUB_OUTPUT
             echo "BASE_TAG=$BASE_TAG" >> $GITHUB_OUTPUT
 
     push-promoted-image:
