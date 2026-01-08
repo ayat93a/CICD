@@ -137,7 +137,68 @@ jobs:
                 file: ./Dockerfile
                 push: true
                 tags: ${{ secrets.AWS_ECR_URL }}/nodeapp:${{ env.VERSION }}
-                
+         
+          
+    promot:
+      runs-on: ubuntu-latest
+      outputs:
+        latest_tag: ${{ steps.extract.outputs.latest_tag }}
+        base_tag: ${{ steps.extract.outputs.base_tag }}
+      steps:
+        - name : Config AWS credintails
+          uses: aws-actions/configure-aws-credentials@v4
+          with:
+            aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+            aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+            aws-region: ${{ secrets.AWS_REGION }} 
+
+        - name:  Login into AWS ecr
+          uses: aws-actions/amazon-ecr-login@v2
+        
+        - name: Get latest image with test tag
+          id: extract
+          run: |
+            LATEST_TAG=$(aws ecr describe-images \
+              --repository-name nodeapp \
+              --region eu-central-1 \
+              --output json \
+            | jq -r '
+                .imageDetails[]
+                | select(.imageTags != null)
+                | select([.imageTags[] | contains("test")] | any)
+                | {pushedAt: .imagePushedAt, tag: (.imageTags[] | select(contains("test")))}
+              ' | jq -s 'sort_by(.pushedAt) | last.tag')
+
+            LATEST_TAG=$(echo "$LATEST_TAG" | tr -d '"')
+            echo "Latest tag = $LATEST_TAG"
+            export BASE_TAG=$(echo "$LATEST_TAG" | cut -d'-' -f1 | tr -d '"')
+            echo "BASE_TAG=$BASE_TAG"
+            echo "Latest tag = $LATEST_TAG" >> $GITHUB_OUTPUT
+            echo "BASE_TAG=$BASE_TAG" >> $GITHUB_OUTPUT
+
+    push-promoted-image:
+      runs-on: ubuntu-latest
+      needs: promot
+      steps:
+      - name : Config AWS credintails
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }} 
+
+      - name:  Login into AWS ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Push promoted image
+        run: |
+          docker pull ${{ secrets.AWS_ECR_URL }}/nodeapp:: ${{ needs.promot.outputs.latest_tag }}
+          docker tag ${{ secrets.AWS_ECR_URL }}/nodeapp:: ${{ needs.promot.outputs.latest_tag }} /
+            ${{ secrets.AWS_ECR_URL }}/nodeapp:: ${{ needs.promot.outputs.base_tag }}
+          docker push ${{ secrets.AWS_ECR_URL }}/nodeapp:: ${{ needs.promot.outputs.base_tag }}
+
+
+
     deploy:
       runs-on: ubuntu-latest
       needs: docker
