@@ -1,6 +1,6 @@
 Name: Testing Pipeline
 
-On:
+on:
   push:
     branches:
       - main
