@@ -25,7 +25,7 @@ jobs:
           echo "version: \"$VERSION\"" > version.yaml
           ls -l
 
-      - name:  Debuugung the extracted Version
+      - name:  Debugging the extracted Version
         run: echo $VERSION
 
       - name: Upload Version artifact
@@ -33,6 +33,35 @@ jobs:
         with:
           name: version
           path: version.yaml
-  # build:
-  #     runs-on: ubuntu-latest
-  #     if: github.ref == 'refs/heads/dev'
+
+  build:
+      runs-on: ubuntu-latest
+      if: github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/feature/*'
+      needs: prepare
+      steps:
+        - name: Checkout repo
+          uses: actions/checkout@v4
+
+        - name: Download Version artifact
+          uses: actions/download-artifact@v4
+          with:
+            name: version
+
+        - name: Setup Node.js
+          uses: actions/setup-node@v4
+          with:
+            node-version: '20'
+
+        - name: Install dependencies
+          run: npm install
+
+        - name: package app artifact 
+          run: |
+            ARTIFACT_NAME="nodeapp-${VERSION}-${GITHUB_SHA:0:7}.tgz"
+            mkdir -p artifacts
+            mkdir -p artifact-temp
+            shopt -s extglob
+            cp -r !(artifact-temp|artifacts|.git|.github) artifact-temp/
+            tar -czf "artifacts/$ARTIFACT_NAME" -C artifact-temp .
+            rm -rf artifact-temp
+            ls -R artifacts
