@@ -1,4 +1,4 @@
-Name: Testing Pipeline
+name: Testing Pipeline
 
 on:
   push:
