@@ -1,0 +1,37 @@
+Name: Testing Pipeline
+
+On:
+  push:
+    branches:
+      - main
+      - dev
+      - test
+    merge_requests:
+      - dev
+      - feature/*
+
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/dev' and github.ref == 'refs/heads/feature/*'
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Extract Version
+        run : |
+          VERSION=$(jq -r .version package.json)
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+          echo "version: \"$VERSION\"" > version.yaml
+          ls -l
+
+      - name:  Debuugung the extracted Version
+        run: echo $VERSION
+
+      - name: Upload Version artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: version
+  # build:
+  #     runs-on: ubuntu-latest
+  #     if: github.ref == 'refs/heads/dev'
