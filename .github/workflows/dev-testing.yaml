@@ -94,7 +94,7 @@ jobs:
           docker build -t my-node-app:${VERSION} --build-arg ARTIFACT_NAME=artifacts/$ARTIFACT_NAME .
 
       - name: Extract app artifact
-          run: |
+        run: |
             mkdir -p app
             ARTIFACT=$(ls nodeapp-${VERSION}-*.tgz | tail -n -1)
             echo $ARTIFACT
@@ -102,7 +102,7 @@ jobs:
 
       - name : Config AWS credintails
         uses: aws-actions/configure-aws-credentials@v4
-          with:
+        with:
             aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
             aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
             aws-region: ${{ secrets.AWS_REGION }}   
@@ -112,7 +112,7 @@ jobs:
 
       - name: Build and push Image 
         uses: docker/build-push-action@v6 
-          with:
+        with:
             context: .
             file: ./Dockerfile
             push: true
