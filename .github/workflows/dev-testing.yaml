@@ -119,4 +119,4 @@ jobs:
             context: .
             file: ./Dockerfile
             push: true
-            tags: ${{ secrets.AWS_ECR_URL }}/nodeapp:${{ env.VERSION }}
+            tags: ${{ secrets.AWS_ECR_URL }}:${{ env.VERSION }}
