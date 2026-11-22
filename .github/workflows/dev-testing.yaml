@@ -5,7 +5,7 @@ on:
     branches:
       - main
       - dev
-      - test
+      - qa
     merge_requests:
       - dev
       - feature/*
@@ -124,7 +124,7 @@ jobs:
 
   promot:
       runs-on: ubuntu-latest
-      if: github.ref == 'refs/heads/test'
+      if: github.ref == 'refs/heads/qa'
       needs: build_image
       steps:
         - name : Config AWS credintails
