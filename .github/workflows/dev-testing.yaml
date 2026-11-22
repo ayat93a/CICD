@@ -85,14 +85,6 @@ jobs:
         with:
           name: nodeapp-artifact
 
-      - name: Setup Docker Buildx
-        uses: docker/setup-buildx-action@v2
-
-      - name: Build Docker image
-        run: |
-          ARTIFACT_NAME="nodeapp-${VERSION}-${GITHUB_SHA:0:7}.tgz"
-          docker build -t my-node-app:${VERSION} --build-arg ARTIFACT_NAME=artifacts/$ARTIFACT_NAME .
-
       - name: Extract app artifact
         run: |
             mkdir -p app
