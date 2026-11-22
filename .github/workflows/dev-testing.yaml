@@ -84,6 +84,11 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: nodeapp-artifact
+      
+      - name: Download Version artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: version
 
       - name: Extract app artifact
         run: |
