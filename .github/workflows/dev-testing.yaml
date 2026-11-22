@@ -125,7 +125,6 @@ jobs:
   promot:
       runs-on: ubuntu-latest
       if: github.ref == 'refs/heads/qa'
-      needs: build_image
       steps:
         - name : Config AWS credintails
           uses: aws-actions/configure-aws-credentials@v4
