@@ -84,11 +84,6 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: nodeapp-artifact
-      
-      - name: Download Version artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: version
 
       - name: Extract app artifact
         run: |
@@ -106,6 +101,17 @@ jobs:
                 
       - name: Login into AWS ecr
         uses: aws-actions/amazon-ecr-login@v2
+
+
+      - name: Download Version artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: version
+
+      - name: Load version into enviroment
+        run: |
+          VERSION=$(grep 'version' version.yaml | cut -d'"' -f2)
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
 
       - name: Build and push Image 
         uses: docker/build-push-action@v6 
