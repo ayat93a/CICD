@@ -151,9 +151,9 @@ jobs:
               ' | jq -s 'sort_by(.pushedAt) | last.tag')
 
             LATEST_TAG=$(echo "$LATEST_TAG" | tr -d '"')
-            echo "Latest_tag = $LATEST_TAG"
+            # echo "Latest_tag = $LATEST_TAG"
             export BASE_TAG=$(echo "$LATEST_TAG" | cut -d'-' -f1 | tr -d '"')
-            echo "BASE_TAG=$BASE_TAG"
+            # echo "BASE_TAG=$BASE_TAG"
             echo "Latest_tag = $LATEST_TAG" >> $GITHUB_OUTPUT
             echo "BASE_TAG=$BASE_TAG" >> $GITHUB_OUTPUT
 
@@ -175,11 +175,8 @@ jobs:
 
       - name: Push promoted image
         run: | 
-          echo "Pushing promoted image with tag: ${{ needs.promot.outputs.BASE_TAG }}"
-          echo "Latest tag = ${{ needs.promot.outputs.LATEST_TAG }}"
-          echo "URL = ${{secrets.AWS_ECR_URL}}"
-          # docker pull ${{ secrets.AWS_ECR_URL }}:${{ needs.promot.outputs.LATEST_TAG }}
-          # docker tag ${{ secrets.AWS_ECR_URL }}:${{ needs.promot.outputs.LATEST_TAG }} \
+          docker pull '${{ secrets.AWS_ECR_URL }}:7.9.13-dev'
+          # docker tag ${{ secrets.AWS_ECR_URL }}:${{ needs.promot.outputs.Latest_tag }} \
           #   ${{ secrets.AWS_ECR_URL }}:${{ needs.promot.outputs.BASE_TAG }}
           # docker push ${{ secrets.AWS_ECR_URL }}:${{ needs.promot.outputs.BASE_TAG }}
 
