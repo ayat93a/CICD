@@ -174,9 +174,12 @@ jobs:
         uses: aws-actions/amazon-ecr-login@v2
 
       - name: Push promoted image
-        run: |
-          docker pull ${{ secrets.AWS_ECR_URL }}:${{ needs.promot.outputs.LATEST_TAG }}
-          docker tag ${{ secrets.AWS_ECR_URL }}:${{ needs.promot.outputs.LATEST_TAG }} \
-            ${{ secrets.AWS_ECR_URL }}:${{ needs.promot.outputs.BASE_TAG }}
-          docker push ${{ secrets.AWS_ECR_URL }}:${{ needs.promot.outputs.BASE_TAG }}
+        run: | 
+          echo "Pushing promoted image with tag: ${{ needs.promot.outputs.BASE_TAG }}"
+          echo "Latest tag = ${{ needs.promot.outputs.LATEST_TAG }}"
+          echo "URL = ${{secrets.AWS_ECR_URL}}"
+          # docker pull ${{ secrets.AWS_ECR_URL }}:${{ needs.promot.outputs.LATEST_TAG }}
+          # docker tag ${{ secrets.AWS_ECR_URL }}:${{ needs.promot.outputs.LATEST_TAG }} \
+          #   ${{ secrets.AWS_ECR_URL }}:${{ needs.promot.outputs.BASE_TAG }}
+          # docker push ${{ secrets.AWS_ECR_URL }}:${{ needs.promot.outputs.BASE_TAG }}
 
