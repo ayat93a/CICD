@@ -175,8 +175,8 @@ jobs:
 
       - name: Push promoted image
         run: |
-          docker pull ${{ secrets.AWS_ECR_URL }}:${{ needs.promot.outputs.latest_tag }}
-          docker tag ${{ secrets.AWS_ECR_URL }}:${{ needs.promot.outputs.latest_tag }} \
-            ${{ secrets.AWS_ECR_URL }}:${{ needs.promot.outputs.base_tag }}
-          docker push ${{ secrets.AWS_ECR_URL }}:${{ needs.promot.outputs.base_tag }}
+          docker pull ${{ secrets.AWS_ECR_URL }}:${{ needs.promot.outputs.LATEST_TAG }}
+          docker tag ${{ secrets.AWS_ECR_URL }}:${{ needs.promot.outputs.LATEST_TAG }} \
+            ${{ secrets.AWS_ECR_URL }}:${{ needs.promot.outputs.BASE_TAG }}
+          docker push ${{ secrets.AWS_ECR_URL }}:${{ needs.promot.outputs.BASE_TAG }}
 
