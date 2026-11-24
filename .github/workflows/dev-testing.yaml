@@ -157,7 +157,7 @@ jobs:
             echo "Latest_tag = $LATEST_TAG" >> $GITHUB_OUTPUT
             echo "BASE_TAG=$BASE_TAG" >> $GITHUB_OUTPUT
 
-    push-promoted-image:
+  push-promoted-image:
       runs-on: ubuntu-latest
       if: github.ref == 'refs/heads/qa'
 
