@@ -144,7 +144,6 @@ jobs:
           run: |
             LATEST_TAG=$(aws ecr describe-images \
               --repository-name githubactions \
-              #  --profile Modee-DevOps \
               --region eu-west-1 \
               --output json \
             | jq -r '
